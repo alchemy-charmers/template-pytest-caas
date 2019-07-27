@@ -8,9 +8,10 @@ tags:
   # https://jujucharms.com/docs/stable/authors-charm-metadata
   - misc
 subordinate: false
-series:
-  - bionic
-  - xenial
+resources:
+    ${metadata.package}_image:
+        type: oci-image
+        description: Image used for $metadata.package pod
 # provides:
 #   provides-relation:
 #     interface: interface-name

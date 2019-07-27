@@ -4,4 +4,5 @@ exclude:
   - layers
 # include required layers here
 includes:
-  - layer:basic
+  - layer:caas-base
+  - layer:docker-resource
