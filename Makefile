@@ -10,6 +10,12 @@ ifneq ($(PYTEST_SELECT_MARKS),)
 BUILD_VARS+=PYTEST_SELECT_MARKS="$(PYTEST_SELECT_MARKS)"
 endif
 
+CHARM_NAME := $(shell basename "$$PWD")
+CHARM_VERSION=$(shell cat ./repo-info)
+ifeq ($(CHARM_VERSION),)
+CHARM_VERSION="latest"
+endif
+
 help:
 	@echo "This project supports the following targets"
 	@echo ""
@@ -45,6 +51,7 @@ build:
 	@-git describe --tags > ./repo-info
 	@LAYER_PATH=./layers INTERFACE_PATH=./interfaces TERM=linux \
 		JUJU_REPOSITORY=$(JUJU_REPOSITORY) charm build . --force
+	@docker build . -t $(CHARM_NAME):$(CHARM_VERSION)
 
 release: clean build
 	@echo "Charm is built at $(JUJU_REPOSITORY)/builds"
