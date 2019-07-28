@@ -4,3 +4,6 @@ containers:
           imagePath: {{ registry_path }}
           username: {{ image_username }}
           password: {{ image_password }}
+      ports:
+      	- name: ssh
+	  containerPort: 22
