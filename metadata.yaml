@@ -8,6 +8,8 @@ tags:
   # https://jujucharms.com/docs/stable/authors-charm-metadata
   - misc
 subordinate: false
+series:
+   - kubernetes
 resources:
     ${metadata.package}_image:
         type: oci-image
