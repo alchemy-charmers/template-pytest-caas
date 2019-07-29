@@ -1,7 +1,7 @@
 from ${libfile} import ${libclass}
 from charmhelpers.core import hookenv
 from charms.reactive import when, when_not
-from charms.reactive.flags import set_flag
+from charms.reactive import set_flag
 from charms import layer
 
 helper = ${libclass}()

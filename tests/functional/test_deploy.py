@@ -3,25 +3,31 @@ import pytest
 import subprocess
 import stat
 
+from charmhelpers.core import hookenv
+
+os.environ['JUJU_CHARM_DIR'] = '.'
+metadata = hookenv.metadata()
+
 # Treat all tests as coroutines
 pytestmark = pytest.mark.asyncio
 
 juju_repository = os.getenv("JUJU_REPOSITORY", ".").rstrip("/")
-# series = [
-#     "xenial",
-#     "bionic",
-#     pytest.param("cosmic", marks=pytest.mark.xfail(reason="canary")),
-# ]
+images = [
+# Tuple: (name, image:tag)
+    ("xenial", pytest.param("ubuntu:16.04")),
+    ("bionic", pytest.param("ubuntu:18.04")),
+    ("latest", pytest.param("ubuntu:latest", marks=pytest.mark.xfail(reason="canary"))),
+]
 sources = [
-    ("local", "{}/builds/${metadata.package}".format(juju_repository)),
+    ("local", "{}/builds/{}".format(juju_repository, metadata.get('name'))),
     # ('jujucharms', 'cs:...'),
 ]
 
 
 # Custom fixtures
-# @pytest.fixture(params=series)
-# def series(request):
-#     return request.param
+@pytest.fixture(params=images, ids=[i[0] for i in images])
+def image(request):
+    return request.param
 
 
 @pytest.fixture(params=sources, ids=[s[0] for s in sources])
@@ -30,20 +36,31 @@ def source(request):
 
 
 @pytest.fixture
-async def app(model, source):
-    app_name = "${metadata.package}-{}".format(source[0])
+async def app(model, image, source):
+    app_name = "{}-{}-{}".format(metadata.get('name'),
+                                 image[0],
+                                 source[0],
+                                 )
     return await model._wait_for_new("application", app_name)
 
 
 @pytest.mark.deploy
-async def test_${fixture}_deploy(model, source, request):
-   # Starts a deploy for each series
-   # Using subprocess b/c libjuju fails with JAAS
-   # https://github.com/juju/python-libjuju/issues/221
-   application_name = '${metadata.package}-{}'.format(source[0])
-   cmd = ['juju', 'deploy', source[1], '-m', model.info.name,
-          application_name, '--resource', '${metadata.package}_image=${metadata.package}']
-   subprocess.check_call(cmd)
+async def test_${fixture}_deploy(model, image, source, request):
+    # Starts a deploy for each series
+    # Using subprocess b/c libjuju fails with JAAS
+    # https://github.com/juju/python-libjuju/issues/221
+    application_name = '{}-{}-{}'.format(metadata.get('name'),
+                                         image[0],
+                                         source[0])
+    cmd = ['juju',
+           'deploy',
+           source[1],
+           '-m',
+           model.info.name,
+           application_name,
+           '--resource',
+           '{}_image={}'.format(metadata.get('name'), image[1].values[0])]
+    subprocess.check_call(cmd)
 
 
 @pytest.mark.deploy
