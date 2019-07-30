@@ -49,7 +49,7 @@ def mock_remote_unit(monkeypatch):
 
 @pytest.fixture
 def mock_charm_dir(monkeypatch):
-    monkeypatch.setattr('${libfile}.hookenv.charm_dir', lambda: '/mock/charm/dir')
+    monkeypatch.setattr('${libfile}.hookenv.charm_dir', lambda: '.')
 
 
 @pytest.fixture
