@@ -64,7 +64,7 @@ async def test_${fixture}_deploy(model, image, source, request):
 
 
 @pytest.mark.deploy
-@pytest.mark.timeout(300)
+@pytest.mark.timeout(60)
 async def test_charm_upgrade(model, app):
     if app.name.endswith("local"):
         pytest.skip("No need to upgrade the local deploy")
@@ -84,7 +84,7 @@ async def test_charm_upgrade(model, app):
 
 
 @pytest.mark.deploy
-@pytest.mark.timeout(300)
+@pytest.mark.timeout(60)
 async def test_${fixture}_status(model, app):
     # Verifies status for all deployed series of the charm
     await model.block_until(lambda: app.status == 'active')
