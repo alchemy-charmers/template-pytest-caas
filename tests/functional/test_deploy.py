@@ -64,7 +64,7 @@ async def test_${fixture}_deploy(model, image, source, request):
 
 
 @pytest.mark.deploy
-@pytest.mark.timeout(60)
+@pytest.mark.timeout(90)
 async def test_charm_upgrade(model, app):
     if app.name.endswith("local"):
         pytest.skip("No need to upgrade the local deploy")
@@ -84,7 +84,7 @@ async def test_charm_upgrade(model, app):
 
 
 @pytest.mark.deploy
-@pytest.mark.timeout(60)
+@pytest.mark.timeout(90)
 async def test_${fixture}_status(model, app):
     # Verifies status for all deployed series of the charm
     await model.block_until(lambda: app.status == 'active')
@@ -98,22 +98,22 @@ async def test_${fixture}_status(model, app):
 #     action = await unit.run_action("example-action")
 #     action = await action.wait()
 #     assert action.status == "completed"
-
-
-async def test_run_command(app, jujutools):
-    unit = app.units[0]
-    cmd = "hostname --all-ip-addresses"
-    results = await jujutools.run_command(cmd, unit)
-    assert results["Code"] == "0"
-    assert unit.public_address in results["Stdout"]
-
-
-async def test_file_stat(app, jujutools):
-    unit = app.units[0]
-    path = "/var/lib/juju/agents/unit-{}/charm/metadata.yaml".format(
-        unit.entity_id.replace("/", "-")
-    )
-    fstat = await jujutools.file_stat(path, unit)
-    assert stat.filemode(fstat.st_mode) == "-rw-r--r--"
-    assert fstat.st_uid == 0
-    assert fstat.st_gid == 0
+#
+#
+# async def test_run_command(app, jujutools):
+#     unit = app.units[0]
+#     cmd = "hostname --all-ip-addresses"
+#     results = await jujutools.run_command(cmd, unit)
+#     assert results["Code"] == "0"
+#     assert unit.public_address in results["Stdout"]
+#
+#
+# async def test_file_stat(app, jujutools):
+#     unit = app.units[0]
+#     path = "/var/lib/juju/agents/unit-{}/charm/metadata.yaml".format(
+#         unit.entity_id.replace("/", "-")
+#     )
+#     fstat = await jujutools.file_stat(path, unit)
+#     assert stat.filemode(fstat.st_mode) == "-rw-r--r--"
+#     assert fstat.st_uid == 0
+#     assert fstat.st_gid == 0
