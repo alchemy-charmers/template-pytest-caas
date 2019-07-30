@@ -21,7 +21,5 @@ def ${safe_package}_configure():
     hookenv.status_set('maintenance', 'Configuring ${metadata.package} container')
     spec = helper.make_pod_spec()
     hookenv.log('Setting pod spec:\n{}'.format(spec))
-    if layer.caas_base.pod_spec_set(spec):
-        set_flag('${metadata.package}.configured')
-    else:
-        hookenv.log('Failed to set spec', 'ERROR')
+    layer.caas_base.pod_spec_set(spec)
+    set_flag('${metadata.package}.configured')
