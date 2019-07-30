@@ -11,14 +11,16 @@ if set, the testing model won't be torn down at the end of the testing session
 
 import asyncio
 import os
-import uuid
-import pytest
 import subprocess
+import uuid
 
 from juju.controller import Controller
-from juju.model import Model
-from juju_tools import JujuTools
 from juju.errors import JujuConnectionError
+from juju.model import Model
+
+from juju_tools import JujuTools
+
+import pytest
 
 
 @pytest.fixture(scope="module")

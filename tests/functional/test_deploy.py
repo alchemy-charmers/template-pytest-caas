@@ -1,9 +1,9 @@
 import os
-import pytest
 import subprocess
-import stat
 
 from charmhelpers.core import hookenv
+
+import pytest
 
 os.environ['JUJU_CHARM_DIR'] = '.'
 metadata = hookenv.metadata()
@@ -13,7 +13,7 @@ pytestmark = pytest.mark.asyncio
 
 juju_repository = os.getenv("JUJU_REPOSITORY", ".").rstrip("/")
 images = [
-# Tuple: (name, image:tag)
+    # Tuple: (name, image:tag)
     ("xenial", pytest.param("ubuntu:16.04")),
     ("bionic", pytest.param("ubuntu:18.04")),
     ("latest", pytest.param("ubuntu:latest", marks=pytest.mark.xfail(reason="canary"))),

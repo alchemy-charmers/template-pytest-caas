@@ -1,8 +1,9 @@
-from ${libfile} import ${libclass}
 from charmhelpers.core import hookenv
-from charms.reactive import when, when_not
-from charms.reactive import set_flag
+
 from charms import layer
+from charms.reactive import set_flag, when, when_not
+
+from ${libfile} import ${libclass}
 
 helper = ${libclass}()
 
@@ -11,9 +12,11 @@ helper = ${libclass}()
 def fetch_image():
     layer.docker_resource.fetch('${metadata.package}_image')
 
+
 @when('${metadata.package}.configured')
 def ${safe_package}_active():
-    hookenv.status_set('active','')
+    hookenv.status_set('active', '')
+
 
 @when('layer.docker-resource.${metadata.package}_image.available')
 @when_not('${metadata.package}.configured')
