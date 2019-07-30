@@ -8,10 +8,6 @@ class ${libclass}():
         self.charm_config = hookenv.config()
         self.metadata = hookenv.metadata()
 
-    def action_function(self):
-        ''' An example function for calling from an action '''
-        return
-
     def make_pod_spec(self):
         image_info = layer.docker_resource.get_info('${metadata.package}_image')
         context = {'registry_path': image_info.registry_path,

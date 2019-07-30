@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+import collections
+
 import mock
 
 import pytest
@@ -9,9 +11,17 @@ import pytest
 @pytest.fixture
 def mock_layers(monkeypatch):
     import sys
+    # Mock any functions in layers that need to be mocked here
     sys.modules['charms.layer'] = mock.Mock()
     sys.modules['reactive'] = mock.Mock()
-    # Mock any functions in layers that need to be mocked here
+
+    get_info = collections.namedtuple('mock_info', 'registry_path image_username image_password')
+    get_info.registry_path = 'mock_registry_path'
+    get_info.username = 'mock_image_username'
+    get_info.password = 'mock_image_password'
+
+    mock_get_info = mock.Mock()
+    mock_get_info.return_value = get_info
 
     def options(layer):
         # mock options for layers here
@@ -22,6 +32,7 @@ def mock_layers(monkeypatch):
             return None
 
     monkeypatch.setattr('${libfile}.layer.options', options)
+    monkeypatch.setattr('${libfile}.layer.docker_resource.get_info', mock_get_info)
 
 
 @pytest.fixture
